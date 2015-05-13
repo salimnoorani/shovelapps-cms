@@ -40,6 +40,7 @@ block content
               th #{__('Title')}
               if place.menu == 'sidemenu'
                 th #{__('Type')}
+                th #{__('Parent')}
               th #{__('Linked to')}
               th #{__('Icon')}
               th #{__('Actions')}
@@ -60,6 +61,13 @@ block content
                         each type in types
                           -var tsel = appmenu.type==type
                           option(selected=tsel)=type
+                    td
+                      select.select2.selectParent(data-placeholder="Parent")
+                        -var hasnoparent= appmenu.parent=='None'
+                        option="None"
+                        each parentMenu in menues
+                          -var psel = appmenu.parent==parentMenu.title
+                          option(selected=psel)=parentMenu.title
                   td
                     select.select2.screenId(data-placeholder="Parent")
                       each screen in screens
@@ -89,6 +97,11 @@ block content
                   select.select2.selectType
                     each type in types
                       option=type
+                td
+                  select.select2.selectParent
+                    option="None"
+                    each parentMenu in menues
+                      option=parentMenu.title
               td
                 select.select2.screenId
                   each screen in screens
@@ -132,9 +145,22 @@ block scripts
           $(lastIconButton).html($(this).attr('data-iconname'));
         });
         $("table").on("click",".delete",function(e){
-          var btn = $(this), row = btn.parents("tr");
-
-          return row.fadeOut(function(){ $(this).remove(); checkPosition();}), false;
+          var row = $(this).parents("tr");
+          var title = row.find('input.title:first').val();
+          row.fadeOut(function(){
+            $(this).remove();
+            checkPosition();
+          });
+          $('select.selectParent').each(function(){
+            if($(this).val()==title){
+              console.log($(this).parents("tr"));
+              $(this).parents("tr:first").fadeOut(function(){
+                $(this).remove();
+                checkPosition();
+              });
+            }
+          });
+          return false;
         });
         $("table").on("click",".add",function(e){
           var row = $(this).parents("tr:first");
@@ -148,12 +174,18 @@ block scripts
             ),
             $("<a>").addClass("delete").attr("href", "#")
           );
-          newRow.find('select.selectType').val(row.find('select.selectType').val());
-          newRow.find('select.screenId').val(row.find('select.screenId').val());
+          newRow.find('select.selectType:first').val(row.find('select.selectType:first').val());
+          newRow.find('select.selectParent:first').val(row.find('select.selectParent:first').val());
+          newRow.find('select.screenId:first').val(row.find('select.screenId:first').val());
           row.find('input:first').val('');
           row.find('select.selectType').val(row.find('select.selectType option:first').val());
           row.find('select.screenId').val(row.find('select.screenId option:first').val());
           row.find('.iconId:first').html('Select icon')
+          $('.title').each(function(){
+            if($(this).val()==newRow.find('select.selectParent:first').val()){
+              newRow.insertAfter($(this).parents("tr:first"));
+            }
+          });
           checkPosition();
           checktypes();
           return false;
