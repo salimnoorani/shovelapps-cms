@@ -1,24 +1,26 @@
 extend ../../themes/admin/layout
 
+
+
 block content
+  - var listPlugins = [{name:"Content Plugins",id:"ContentPlugins",plugins:[{name:"Html",menu:"Static Content (HTML)",id:"plugin-01",main:{js:"screens/js/examples/htmlPlugin.js",css:""}}, {name:"Form",menu:"Form Example",id:"plugin-02",main:{js:"screens/js/examples/formPlugin.js",css:""}}]}];
+
   form#screenform(action="/admin/screens", method="post")
+    input(type="hidden", name="id", value="#{screen.id}")
     input(type="hidden", name="currentId", value="#{screen.id}")
     input(type="hidden", name="position", value="#{screen.position}")
     input(type="hidden", name="isMain", value="#{screen.isMain}")
+
     .container-fluid.bg-white.cms(role='main')
       .header.center-block.row.voffset6
         a.back-button.pull-left(href='#')
-        .col-md-3.devices.text-right
-          .os
-            a.android.active(href='#')
-            a.ios(href='#')
-          a.phone.active(href='#')
-          a.tablet(href='#')
-        .col-md-3
+        .col-md-3.col-md-offset-3
           input.shovel-control(name='title',type='text', value="#{screen.title}")
-        .col-md-3.col-md-offset-1
+        .col-md-2.col-md-offset-2
           select.form-control
-            option Splash
+            option Content
+          select.form-control.voffset2
+            option Compatibility
         .col-md-1
           a#destroyScreenButton.upload-theme.pull-right(href="#")
             img(src='/coreassets/assets/delete.svg')
@@ -27,23 +29,23 @@ block content
           a#save.upload-theme.pull-right(href='#')
             img(src='/coreassets/assets/save-icon.svg')
             span Save
-      .row.center-block.voffset7.text-left
+      .row.center-block.voffset3.text-left
         .col-md-2.col-md-offset-1.text-right
           .header.small
             h4 Plugins
             .search
               input(type='text', placeholder='Search')
           .panel-group.text-left.voffset3.shovel-group-panel.small
-            .panel.panel-default.open
-              .panel-heading(href='#ContentPlugins', data-toggle='collapse')
-                h5.panel-title
-                  i.open.pull-right
-                  | Content Plugins
-              #ContentPlugins.panel-collapse.collapse.in
-                .list-group
-                  a.list-group-item.active(href='#') Static Content (HTML)
-                  a.list-group-item(href='#') Form
-                  a.list-group-item(href='#') Image Gallery
+            each group in listPlugins
+              .panel.panel-default.open
+                .panel-heading(href='##{group.id}', data-toggle='collapse')
+                  h5.panel-title
+                    i.open.pull-right
+                    | #{group.name}
+                .panel-collapse.collapse.in(id="#{group.id}")
+                  .list-group
+                    each option in group.plugins
+                      a.list-group-item.addPlugin(href='#', data-plugin-id="#{option.id}") #{option.menu}
             .panel.panel-default.open
               .panel-heading(href='#AudioVideo', data-toggle='collapse')
                 h5.panel-title
@@ -54,63 +56,34 @@ block content
                   a.list-group-item(href='#') Youtube
                   a.list-group-item(href='#') Grooveshark
                   a.list-group-item(href='#') Cloud Up
-        .col-md-9
-          textarea(cols="80",id="editor1",name="editor1",rows="10")!=screen.content
-            //- // Add font size dropdown
-            //- select.ql-size
-            //-   option(value='small') Small
-            //-   option(value='normal', selected='') Normal
-            //-   option(value='large') Large
-            //-   option(value='huge') Huge
-            //- // Add a bold button
-            //- span.ql-format-group
-            //-   span.ql-format-button.ql-bold(title='Bold')
-            //-   span.ql-format-separator
-            //-   span.ql-format-button.ql-italic(title='Italic')
-            //-   span.ql-format-separator
-            //-   span.ql-format-button.ql-underline(title='Underline')
-            //-   span.ql-format-separator
-            //- span.ql-format-group
-            //-   span.ql-format-button.ql-list(title='List')
-            //-   span.ql-format-separator
-            //-   span.ql-format-button.ql-bullet(title='Bullet')
-            //-   span.ql-format-separator
-            //-   select.ql-align(title='Text Alignment')
-            //-     option(value='left', label='Left', selected='')
-            //-     option(value='center', label='Center')
-            //-     option(value='right', label='Right')
-            //-     option(value='justify', label='Justify')
-            //- div.form-control#screen(name="content",style="height:400px")!=screen.content
-        //- .col-md-4.demo-phone.text-left
-        //-   .demo-theme.android
-        //-     img.phone(src='/coreassets/assets/android-cel.svg')
-        //-     img.theme(src='/coreassets/assets/elmeme.jpg')
-        //-     // <iframe src="https://www.shovelapps.org/"></iframe>
+        .col-md-5.screen-plugins
+          .plugin
+            .header
+              h6 Html
+              a.delete(href='#') x
+            .sort
+              a.up-plugin(href='#')
+                i.glyphicon.glyphicon-chevron-up
+              a.down-plugin(href='#')
+                i.glyphicon.glyphicon-chevron-down
+            .content
+              textarea(cols="80",id="editor1",name="editor1",rows="10")!=screen.content
+        .col-md-4.demo-phone.text-left
+          .demo-theme.android
+            img.phone(src='/coreassets/assets/android-cel.svg')
+            img.theme(src='/coreassets/assets/elmeme.jpg')
+            // <iframe src="https://www.shovelapps.org/"></iframe>
 
-        .col-md-12(style="display:none;")
-          .form-group
-            label(for="title") Screen id
-            input.form-control(name="id", value="#{screen.id}")  
-            span.help-block For links between screens   
-          h4.page-header Other screen actions
-          p
-            a#destroyScreenButtonB(href="#") Remove screen   
-
+  
+  script.
+    var Plugins = !{JSON.stringify(listPlugins)};
 block stylesheets
-  //- link(rel="stylesheet", href="screens/css/quill.base.css")
+  link(rel="stylesheet", href="screens/css/editor.css")
   //- link(rel="stylesheet", href="screens/css/quill.snow.css")
 block scripts
-  script(src="screens/js/CKEditor/ckeditor.js")
-  script(src="screens/js/CKEditor/adapters/jquery.js")
-  //- script(src="screens/js/quill.min.js")
+  script(src="screens/js/require.js")
+  script(src="screens/js/ckeditor/ckeditor.js")
+  script(src="screens/js/ckeditor/adapters/jquery.js")
   script(src="screens/js/jquery.rest.min.js")
   script(src="screens/js/screeneditor.js")
-  script.
-    CKEDITOR.disableAutoInline = true;
-    $( document ).ready( function() {
-      $( '#editor1' ).ckeditor(); // Use CKEDITOR.replace() if element is <textarea>.
-      $( '#editable' ).ckeditor(); // Use CKEDITOR.inline().
-    } );
-    function setValue() {
-      $( '#editor1' ).val( $( 'input#val' ).val() );
-    }
+  script(src="screens/js/main.js")

@@ -1,1 +1,3 @@
-{"title":"Welcomeeee","position":"1","id":"screen-9RL1E","content":"<div style=\"text-align:center;\">\n<p><img src=\"css/img/logo.png\" /></p>\n\n<p><span style=\"font-family:comic sans ms,cursive\"><strong>Manage this app from the <a href=\"http://localhost:3000/admin\">admin panel</a></strong></span></p>\n</div>\n","isMain":"true","_id":"EbJAAvMgWPnkiD4O"}
+{"title":"New screen","position":"2","id":"screen-FEA0I","content":"<p><strong>testttt cosa loca tttttt</strong></p>\n","isMain":"true","_id":"FWzhm3mCx0Ybmh5j"}
+{"id":"screen-8XMO3","position":"3","title":"New screen","content":"<b>Hi</b>","isMain":"false","_id":"Ub1DB6BKXn1lER4D"}
+{"id":"screen-XBB0K","position":"4","title":"New screen","content":"<b>Hi</b>","isMain":"false","_id":"ng6Zvxp0SemJPea2"}
