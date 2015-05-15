@@ -4,7 +4,6 @@ block title
   title Shovel apps CMS - #{__('Menues Manager')}
 
 block content
-  - var types=['Link to page','Container']
   - var places = [{"title": "Main Menu", "menu": "tabbar"}, {"title": "Side Menu", "menu": "sidemenu"}];
   -var icons = ["ion-monitor", "ion-play", "ion-images", "ion-map", "ion-gear-b","ion-music-note", "ion-radio-waves", "ion-earth", "ion-eye", "ion-person", "ion-location", "ion-link", "ion-chevron-left", "ion-information-circled", "ion-share"]
   .container-fluid.bg-white.cms.menues-manager(role="main")
@@ -39,7 +38,6 @@ block content
               th #
               th #{__('Title')}
               if place.menu == 'sidemenu'
-                th #{__('Type')}
                 th #{__('Parent')}
               th #{__('Linked to')}
               th #{__('Icon')}
@@ -54,11 +52,6 @@ block content
                   td
                     input.title(type="text", value=appmenu.title, placeholder="Name your menu")
                   if place.menu == 'sidemenu'
-                    td
-                      select.select2.selectType(data-placeholder="Type")
-                        each type in types
-                          -var tsel = appmenu.type==type
-                          option(selected=tsel)=type
                     td
                       select.select2.selectParent(data-placeholder="Parent")
                         -var hasnoparent= appmenu.parent=='None'
@@ -91,10 +84,6 @@ block content
               td
                 input.title(type="text", placeholder="Name your menu")
               if place.menu == 'sidemenu'
-                td
-                  select.select2.selectType
-                    each type in types
-                      option=type
                 td
                   select.select2.selectParent
                     option="None"
@@ -171,11 +160,9 @@ block scripts
             ),
             $("<a>").addClass("delete").attr("href", "#")
           );
-          newRow.find('select.selectType:first').val(row.find('select.selectType:first').val());
           newRow.find('select.selectParent:first').val(row.find('select.selectParent:first').val());
           newRow.find('select.screenId:first').val(row.find('select.screenId:first').val());
           row.find('input:first').val('');
-          row.find('select.selectType').val(row.find('select.selectType option:first').val());
           row.find('select.selectParent').val(row.find('select.selectParent option:first').val());
           row.find('select.screenId').val(row.find('select.screenId option:first').val());
           row.find('.iconId:first').html('Select icon')
@@ -211,7 +198,7 @@ block scripts
         $("table").on("change",".selectParent",function(e){
           e.preventDefault();
           var row = $(this).parents("tr:first");
-          if($(this).val()!=='None'){
+          if($(this).val()!=='None' && !row.hasClass('new')){
             row.addClass('childMenu');
             $( "<p class='childIcon' style='display:inline;'>¬  </p>" ).insertBefore(row.find('input.title:first'));
           } else {
@@ -219,22 +206,8 @@ block scripts
             row.find('.childIcon').remove();
           }
         });
-        $("table").on("change",".selectType",function(e){
-          e.preventDefault();
-          var row = $(this).parents("tr:first");
-          if($(this).val()=='Container'){
-            row.find('.screenId:first').attr('disabled',true);
-          } else {
-            row.find('.screenId:first').attr('disabled',false);
-          }
-        });
         function checktypes(){
           $('tr').each(function(index){
-            if($(this).find('.selectType').val()=='Container'){
-              $(this).find('.screenId:first').attr('disabled',true);
-            } else {
-              $(this).find('.screenId:first').attr('disabled',false);
-            }
             if($(this).find('.selectParent').val()!=='None' &&$(this).find('.selectParent').val()!==undefined){
               if(!$(this).hasClass('childMenu')){
                 $(this).addClass('childMenu');
@@ -270,17 +243,6 @@ block scripts
                 optionList[optionList.length-1].last().parents('tr').find('.move-down:first').addClass('hidden');
               }
             });
-            //- var rows = $(this).find("tbody tr:not(.new , .childMenu)");
-
-            //- for(var i = 0; i < rows.length; i++)
-            //-   {
-            //-     rows.eq(i).find(".move-up:first, .move-down:first").removeClass("hidden");
-            //-     if(!$(rows.eq(i)).hasClass('childMenu')){
-            //-       rows.eq(i).find(".move-up:first").addClass(position == 1? "hidden" : "");
-            //-       rows.eq(i).find(".move-down:first").addClass(position == rows.length? "hidden" : "");
-            //-     }
-
-            //-   }
           });
         };
         function moveUp(row, prevRow){
