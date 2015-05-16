@@ -21,10 +21,9 @@ block content
           .categorie.clearfix
             h3 Uncategorized
             select#selectMain.form-control.pull-right
-              option(value="not selected") Select main screen
+              option(value="-1") #{__('Select main screen')}
               each screen in screens
-                -var sel = "true"==screen.isMain
-                option(selected=sel, value=screen.id)=screen.title
+                option(selected=screen.isMain, value=screen.id)=screen.title
           .row.screens
             each screen in screens
               .screen(data-id=screen.id)

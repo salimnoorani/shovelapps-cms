@@ -4,7 +4,7 @@ block title
   title Shovel apps CMS - #{__('Screen')}
 
 block content
-  - var listPlugins=[{name:"Content Plugins",id:"ContentPlugins",plugins:[{name:"Html",menu:"Static Content (HTML)",id:"plugin-01",main:{js:"screens/js/examples/htmlPlugin.js",css:""}},{name:"Form",menu:"Forms",id:"plugin-02",main:{js:"screens/js/examples/formPlugin.js",css:""}}, {name:"Mathematical Formulas",menu:"Mathematical Formulas",id:"plugin-04",main:{js:"screens/js/examples/matchJaxPlugin.js",css:""}}]},{name:"Audio & video",id:"AudioVideo",plugins:[{name:"Youtube",menu:"Youtube media",id:"plugin-03",main:{js:"screens/js/examples/youtubePlugin.js",css:""}}]}];
+  - var listPlugins=[{name:"Content Plugins",id:"ContentPlugins",plugins:[{name:"Html",menu:"Static Content (HTML)",id:"plugin-01",main:{js:"screens/js/examples/htmlPlugin.js",css:""}},{name:"Form",menu:"Forms",id:"plugin-02",main:{js:"screens/js/examples/formPlugin.js",css:""}}, {name:"Mathematical Formulas",menu:"Mathematical Formulas",id:"plugin-04",main:{js:"screens/js/examples/matchJaxPlugin.js",css:""}}, {name:"Image",menu:"Add image",id:"plugin-05",main:{js:"screens/js/examples/addImagePlugin/main.js",css:"screens/js/examples/addImagePlugin/main.css"}}]},{name:"Audio & video",id:"AudioVideo",plugins:[{name:"Youtube",menu:"Youtube media",id:"plugin-03",main:{js:"screens/js/examples/youtubePlugin.js",css:""}}]}];
   form#screenform(action="/admin/screens", method="post")
     input(type="hidden", name="id", value="#{screen.id}")
     input(type="hidden", name="currentId", value="#{screen.id}")
@@ -14,14 +14,14 @@ block content
     .container-fluid.bg-white.cms(role='main')
       .header.center-block.row.voffset6
         a.back-button.pull-left(href='#')
-        .col-md-3.col-md-offset-3
+        .col-md-2.col-md-offset-1
+          select.form-control(name="compatibility")
+            option(value=1) Android
+            option(value=2) iOS
+            option(value=3) Android &amp; iOS
+        .col-md-3
           input.shovel-control(name='title',type='text', value="#{screen.title}")
-        .col-md-2.col-md-offset-2
-          select.form-control
-            option Content
-          select.form-control.voffset2
-            option Compatibility
-        .col-md-1
+        .col-md-1.col-md-offset-3
           a#destroyScreenButton.upload-theme.pull-right(href="#")
             img(src='/coreassets/assets/delete.svg')
             span Delete
@@ -45,9 +45,11 @@ block content
                 .panel-collapse.collapse.in(id="#{group.id}")
                   .list-group
                     each option in group.plugins
-                      a.list-group-item.addPlugin(href='#', data-plugin-id="#{option.id}") #{option.menu}
+                      a.list-group-item.addPlugin(href='#', data-plugin-id="#{option.id}")
+                        |#{option.menu}
+                        .pull-right +
         .col-md-5.screen-plugins
-          .plugin.no-plugin
+          .plugin.no-plugin.hidden
             .header
               h6 Html
               a.delete(href='#') x
