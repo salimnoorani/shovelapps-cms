@@ -1708,10 +1708,14 @@ body {
 	background-color: #f5f5f5;
 	display: inline-block;
 	padding: 2px 3px;
-	border-radius: 0 5px 0 5px;
+	border-radius: 0 5px 5px 0;
 	position: absolute;
 	right: -16px;
 	top: 0;
+}
+.screen-plugins .plugin .sort a.disabled {
+	color: #adafaf;
+	cursor: default;
 }
 .screen-plugins .plugin .content {
 	width: 100%;
