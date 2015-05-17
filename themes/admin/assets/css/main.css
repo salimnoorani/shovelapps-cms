@@ -162,6 +162,27 @@ body {
 	text-decoration: none;
 }
 
+.cms .header .header-button {
+	color: #adafaf;
+	font-size: 13px;
+	display: inline-block;
+	text-align: center;
+	line-height: 1;
+	margin-right: 30px;
+}
+.cms .header .header-button:last-child {
+	margin-right: 0;
+}
+.cms .header .header-button img {
+	width: 30px;
+	display: block;
+	margin: 0 auto;
+}
+.cms .header .header-button:hover {
+	opacity: 1;
+	text-decoration: none;
+}
+
 .cms .devices .android, .cms .devices .ios,
 .cms .devices .tablet, .cms .devices .phone {
 	display: inline-block;
@@ -378,6 +399,10 @@ body {
 }
 .cms .demo-theme.android {
 	width: 70%;
+}
+.cms .demo-theme.android.real {
+	width: 100%;
+	max-width: 480px;
 }
 .cms .demo-theme.android iframe, .cms .demo-theme.android .theme {
 	width: 80.1%;
@@ -1736,6 +1761,9 @@ body {
 }
 
 
+.affix-phone {
+	right: 4%;
+}
 
 
 .message-pro {

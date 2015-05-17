@@ -4,7 +4,7 @@ block title
   title Shovel apps CMS - #{__('Screen')}
 
 block content
-  - var listPlugins=[{name:"Content Plugins",id:"ContentPlugins",plugins:[{name:"Html",menu:"Static Content (HTML)",id:"plugin-01",main:{js:"screens/js/examples/htmlPlugin.js",css:""}},{name:"Form",menu:"Forms",id:"plugin-02",main:{js:"screens/js/examples/formPlugin.js",css:""}}, {name:"Mathematical Formulas",menu:"Mathematical Formulas",id:"plugin-04",main:{js:"screens/js/examples/matchJaxPlugin.js",css:""}}, {name:"Image",menu:"Add image",id:"plugin-05",main:{js:"screens/js/examples/addImagePlugin/main.js",css:"screens/js/examples/addImagePlugin/main.css"}}]},{name:"Audio & video",id:"AudioVideo",plugins:[{name:"Youtube",menu:"Youtube media",id:"plugin-03",main:{js:"screens/js/examples/youtubePlugin.js",css:""}}]}];
+  - var listPlugins=[{name:"Content Plugins",id:"ContentPlugins",plugins:[{name:"Html",menu:"Static Content (HTML)",id:"plugin-01",main:{js:"screens/js/examples/htmlPlugin.js",css:""}},{name:"Form",menu:"Forms",id:"plugin-02",main:{js:"screens/js/examples/formPlugin.js",css:""}}, {name:"Mathematical Formulas",menu:"Mathematical Formulas",id:"plugin-04",main:{js:"screens/js/examples/matchJaxPlugin.js",css:""}}, {name:"Image",menu:"Add image",id:"plugin-05",main:{js:"screens/js/examples/addImagePlugin/main.js",css:"screens/js/examples/addImagePlugin/main.css"}}, {name:"Map",menu:"Add map",id:"plugin-06",main:{js:"screens/js/examples/gmaps/main.js",css:"screens/js/examples/gmaps/main.css"}}]},{name:"Audio & video",id:"AudioVideo",plugins:[{name:"Youtube",menu:"Youtube media",id:"plugin-03",main:{js:"screens/js/examples/youtubePlugin.js",css:""}}]},{name:"Style",id:"Style",plugins:[{name:"Background",menu:"Change background",id:"plugin-07",main:{js:"screens/js/examples/changeBackground/main.js",css:"screens/js/examples/changeBackground/main.css"}}]}];
   form#screenform(action="/admin/screens", method="post")
     input(type="hidden", name="id", value="#{screen.id}")
     input(type="hidden", name="currentId", value="#{screen.id}")
@@ -21,12 +21,11 @@ block content
             option(value=3) Android &amp; iOS
         .col-md-3
           input.shovel-control(name='title',type='text', value="#{screen.title}")
-        .col-md-1.col-md-offset-3
-          a#destroyScreenButton.upload-theme.pull-right(href="#")
+        .col-md-4.col-md-offset-2.text-center
+          a#destroyScreenButton.header-button(href="#")
             img(src='/coreassets/assets/delete.svg')
             span Delete
-        .col-md-1
-          a#save.upload-theme.pull-right(href='#')
+          a#save.header-button(href='#')
             img(src='/coreassets/assets/save-icon.svg')
             span Save
       .row.center-block.voffset3.text-left
@@ -60,8 +59,8 @@ block content
                 i.glyphicon.glyphicon-chevron-down
             .content
               textarea(cols="80",id="editor1",name="editor1",rows="10")!=screen.content
-        .col-md-4.demo-phone.text-left
-          .demo-theme.android
+        .col-md-4.demo-phone
+          .demo-theme.android.real
             img.phone(src='/coreassets/assets/android-cel.svg')
             //-img.theme(src='/coreassets/assets/elmeme.jpg')
             iframe.iframe-demo
@@ -79,3 +78,9 @@ block scripts
   script(src="screens/js/jquery.rest.min.js")
   script(src="screens/js/screeneditor.js")
   script(src="screens/js/main.js")
+  script.
+    require.config({
+      paths: {
+          'jquery': '/coreassets/jquery/jquery'
+      }
+    });
