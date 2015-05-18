@@ -234,7 +234,7 @@ block scripts
           }
         });
         function checktypes(){
-          $('tr').each(function(index){
+          $('tr:not(.new)').each(function(index){
             if($(this).find('.selectParent').val()!=='None' &&$(this).find('.selectParent').val()!==undefined){
               if(!$(this).hasClass('childMenu')){
                 $(this).addClass('childMenu');
