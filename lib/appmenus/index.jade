@@ -57,8 +57,9 @@ block content
                         -var hasnoparent= appmenu.parent=='None'
                         option="None"
                         each parentMenu in menues
-                          -var psel = appmenu.parent==parentMenu.title
-                          option(selected=psel)=parentMenu.title
+                          if parentMenu.parent=='None'
+                            -var psel = appmenu.parent==parentMenu.title
+                            option(selected=psel)=parentMenu.title
                   td
                     select.select2.screenId(data-placeholder="Parent")
                       each screen in screens
@@ -88,7 +89,8 @@ block content
                   select.select2.selectParent
                     option="None"
                     each parentMenu in menues
-                      option=parentMenu.title
+                      if parentMenu.parent=='None'
+                        option=parentMenu.title
               td
                 select.select2.screenId
                   each screen in screens
@@ -198,12 +200,37 @@ block scripts
         $("table").on("change",".selectParent",function(e){
           e.preventDefault();
           var row = $(this).parents("tr:first");
-          if($(this).val()!=='None' && !row.hasClass('new')){
-            row.addClass('childMenu');
-            $( "<p class='childIcon' style='display:inline;'>¬  </p>" ).insertBefore(row.find('input.title:first'));
+          var selected = $(this).val();
+          if(selected !=='None' && !row.hasClass('new')){
+            if(!row.hasClass('childMenu')){
+              row.addClass('childMenu');
+              $( "<p class='childIcon' style='display:inline;'>¬  </p>" ).insertBefore(row.find('input.title:first'));
+            }
+            $('input.title').each(function(){
+              if($(this).val()==selected){
+                row.insertAfter($(this).parents('tr'));
+              }
+            });
           } else {
             row.removeClass('childMenu');
             row.find('.childIcon').remove();
+          }
+          checktypes();
+        });
+        $("table").on("focus",".selectParent",function(e){
+          var parentsMenus = [];
+          var menuTitle=$(this).parents('tr').find('.title').val();
+          $(this).find('option').each(function(){
+            $(this).remove();
+          });
+          $(this).append('<option>None</option>');
+          $('input.title').each(function(){
+            if($(this).parents('tr:not(.new)').find('.selectParent').val()==='None' && $(this).parents('tr:not(.new)').find('.title').val()!==menuTitle){
+              parentsMenus.push($(this).val());
+            }
+          });
+          for(var i = 0; i < parentsMenus.length; i++){
+            $(this).append('<option>'+parentsMenus[i]+'</option>');
           }
         });
         function checktypes(){
@@ -216,6 +243,16 @@ block scripts
             }
           });
           checkPosition();
+          checkParents();
+        }
+        function checkParents(){
+          $('tr:not(.new)').each(function(){
+            if($(this).next().hasClass('childMenu')){
+              $(this).find('select.selectParent:first').prop('disabled', 'disabled');
+            } else {
+              $(this).find('select.selectParent:first').prop('disabled', false);
+            }
+          });
         }
         function checkPosition(){
           var tables = $("table");
