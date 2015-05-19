@@ -138,13 +138,13 @@ block scripts
           var title = row.find('input.title:first').val();
           row.fadeOut(function(){
             $(this).remove();
-            checkPosition();
+            checktypes();
           });
           $('select.selectParent').each(function(){
             if($(this).val()==title){
               $(this).parents("tr:first").fadeOut(function(){
                 $(this).remove();
-                checkPosition();
+                checktypes();
               });
             }
           });
@@ -201,6 +201,9 @@ block scripts
           e.preventDefault();
           var row = $(this).parents("tr:first");
           var selected = $(this).val();
+          if(selected=='None' && !row.hasClass('new')){
+            row.insertBefore(row.nextAll('tr:not(.childMenu)').eq(0));
+          }
           if(selected !=='None' && !row.hasClass('new')){
             if(!row.hasClass('childMenu')){
               row.addClass('childMenu');
@@ -218,6 +221,7 @@ block scripts
           checktypes();
         });
         $("table").on("focus",".selectParent",function(e){
+          var prevValue = $(this).val();
           var parentsMenus = [];
           var menuTitle=$(this).parents('tr').find('.title').val();
           $(this).find('option').each(function(){
@@ -230,7 +234,25 @@ block scripts
             }
           });
           for(var i = 0; i < parentsMenus.length; i++){
-            $(this).append('<option>'+parentsMenus[i]+'</option>');
+            if(parentsMenus[i]==prevValue){
+              $(this).append('<option selected>'+parentsMenus[i]+'</option>');
+            } else {
+              $(this).append('<option>'+parentsMenus[i]+'</option>');
+            }
+          }
+          checktypes();
+        });
+        $("table").on("keyup",".title",function(e){
+          var done = true;
+          var nextRow = $(this).parents('tr').next();
+          while (done) {
+            if(nextRow.hasClass('childMenu')) {
+              nextRow.find('.selectParent option:selected').remove();
+              nextRow.find('.selectParent').append('<option selected>'+$(this).val()+'</option>');
+              nextRow=nextRow.next();
+            } else {
+            done =false;
+            }
           }
         });
         function checktypes(){
@@ -240,6 +262,9 @@ block scripts
                 $(this).addClass('childMenu');
                 $( "<p class='childIcon' style='display:inline;'>¬  </p>" ).insertBefore($(this).find('input.title:first'));
               }
+            }else {
+              $(this).removeClass('childMenu');
+              $(this).find('.childIcon').remove();
             }
           });
           checkPosition();
@@ -247,7 +272,7 @@ block scripts
         }
         function checkParents(){
           $('tr:not(.new)').each(function(){
-            if($(this).next().hasClass('childMenu')){
+            if($(this).next().hasClass('childMenu') && $(this).find('select.selectParent:first').val()=='None'){
               $(this).find('select.selectParent:first').prop('disabled', 'disabled');
             } else {
               $(this).find('select.selectParent:first').prop('disabled', false);
@@ -267,11 +292,16 @@ block scripts
               allRows.eq(i).find("td:first").text(position);
               allRows.eq(i).find(".move-up:first, .move-down:first").removeClass("hidden");
             }
-            $(this).find('select.selectParent:first option').each(function(){
-              var option = $(this).val();
+            var parentsArray=['None'];
+            $(this).find('input.title').each(function(){
+              if($(this).parents('tr:not(.new)').find('.selectParent').val()==='None'){
+                parentsArray.push($(this).val());
+              }
+            });
+            $.each(parentsArray, function(index, parent){
               var optionList=[]; 
               allRows.find('select.selectParent').each(function(){
-                if($(this).val()==option){
+                if($(this).val()==parent){
                  optionList.push($(this));
                 }
               });
@@ -279,6 +309,10 @@ block scripts
                 optionList[0].parents('tr').find('.move-up:first').addClass('hidden');
                 optionList[optionList.length-1].last().parents('tr').find('.move-down:first').addClass('hidden');
               }
+            });
+            //aca no tengo q hacerlo en base al primero, tengo q levantar los titles
+            $(this).find('select.selectParent:first option').each(function(){
+
             });
           });
         };
