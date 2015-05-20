@@ -96,22 +96,20 @@ html(lang="en", ng-app="myApp")
       ons-template(id="menu.html")
         ons-list
           if tabbarlist.length
-          //- if tabbar is present, main page is the tabbar
-          ons-list-item(modifier="chevron", onclick="Smenu.setMainPage('tab-bar.html', {closeMenu: true})")
-            span=mainScreen[0].title
+            //- if tabbar is present, main page is the tabbar
+            ons-list-item(modifier="chevron", onclick="Smenu.setMainPage('tab-bar.html', {closeMenu: true})")
+              span=mainScreen[0].title
+          else
+            ons-list-item(modifier="chevron", onclick="Smenu.setMainPage('#{mainScreen[0].id}.html', {closeMenu: true})")
+              span=mainScreen[0].title
           each menu in sidemenulist
             //- add link for each item in the sidemenu
-            if menu.type=='Link to page'
-              ons-list-item(modifier="chevron", onclick="Smenu.setMainPage('#{menu.screenID}.html', {closeMenu: true})")
-                if menu.icon!=='none'
-                  ons-icon(icon=menu.icon)
-                span=menu.title
-            else if menu.type=='Container'
-              ons-list-header=menu.title
+            ons-list-item(modifier="chevron", onclick="Smenu.setMainPage('#{menu.screenID}.html', {closeMenu: true})")
+              if menu.icon!=='none'
+                ons-icon(icon=menu.icon)
+              span=menu.title
 
 style.
   ons-list-item > ons-icon {
   margin: 0 6px 0 0;
   }
-script.
-  ons.bootstrap();
