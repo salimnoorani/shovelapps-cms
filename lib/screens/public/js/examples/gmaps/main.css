@@ -14,3 +14,7 @@
 	font-weight: bold;
 	color: #000;
 }
+.gmaps .map {
+	width: 100%;
+	height: 250px;
+}
