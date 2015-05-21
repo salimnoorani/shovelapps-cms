@@ -9,6 +9,9 @@
 .gmaps input {
 	padding: 5px;
 }
+.gmaps textarea {
+	border: solid 2px #e9e9ea!important;
+}
 .gmaps .title {
 	font-size: 20px;
 	font-weight: bold;

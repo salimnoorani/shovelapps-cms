@@ -390,6 +390,7 @@ body {
 	position: absolute;
 	border: none!important;
 	border-radius: 0!important;
+	background: #fff;
 }
 .cms .demo-theme {
 	margin-bottom: 30px;
