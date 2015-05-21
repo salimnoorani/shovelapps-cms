@@ -1,3 +1,3 @@
-{"title":"New screen","position":"2","id":"screen-FEA0I","content":"<p><strong>testttt cosa loca tttttt</strong></p>\n","isMain":"true","_id":"FWzhm3mCx0Ybmh5j"}
+{"title":"New screen","position":"2","id":"screen-FEA0I","content":"<p>fsdfsd</p>\n<p>dsfsdf</p>\n","pluginStates":"[{\"id\":\"plugin-01\",\"state\":{\"html\":\"<p>fsdfsd</p>\\n\"}},{\"id\":\"plugin-02\",\"state\":{\"html\":\"<p>dsfsdf</p>\\n\"}}]","pluginResources":"{\"css\":[\"http://localhost:3000/admin/screens/js/ckeditor/contents.css?t=F0RD\",\"http://localhost:3000/admin/screens/js/ckeditor/contents.css?t=F0RD\"],\"js\":[]}","isMain":"true","_id":"FWzhm3mCx0Ybmh5j"}
 {"id":"screen-8XMO3","position":"3","title":"New screen","content":"<b>Hi</b>","isMain":"false","_id":"Ub1DB6BKXn1lER4D"}
 {"id":"screen-XBB0K","position":"4","title":"New screen","content":"<b>Hi</b>","isMain":"false","_id":"ng6Zvxp0SemJPea2"}
