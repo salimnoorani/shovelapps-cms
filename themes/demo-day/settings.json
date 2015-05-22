@@ -1,0 +1,11 @@
+{
+	"menu_places": [
+		{"title": "Main Menu", "menu": "tabbar"}, 
+		{"title": "Side Menu", "menu": "sidemenu"}
+	],
+	"icons": ["ion-monitor", "ion-play", "ion-images", "ion-map", "ion-gear-b","ion-music-note", "ion-radio-waves", "ion-earth", "ion-eye", "ion-person", "ion-location", "ion-link", "ion-chevron-left", "ion-information-circled", "ion-share"],
+	"resources": {
+		"css": [],
+		"js": []
+	}
+}

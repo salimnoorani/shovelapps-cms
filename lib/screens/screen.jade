@@ -4,7 +4,8 @@ block title
   title Shovel apps CMS - #{__('Screen')}
 
 block content
-  - var listPlugins=[{name:"Contents",id:"Contents",plugins:[{name:"Html",menu:"Static Content (HTML)",id:"plugin-01",main:{js:"screens/js/examples/htmlPlugin.js",css:""}},{name:"Form",menu:"Forms",id:"plugin-02",main:{js:"screens/js/examples/formPlugin.js",css:""}}, {name:"Mathematical Formulas",menu:"Mathematical Formulas",id:"plugin-04",main:{js:"screens/js/examples/matchJaxPlugin.js",css:""}}, {name:"Image",menu:"Add image",id:"plugin-05",main:{js:"screens/js/examples/addImagePlugin/main.js",css:"screens/js/examples/addImagePlugin/main.css"}}, {name:"Map",menu:"Add map",id:"plugin-06",main:{js:"screens/js/examples/gmaps/main.js",css:"screens/js/examples/gmaps/main.css"}}]},{name:"Audio & video",id:"AudioVideo",plugins:[{name:"Youtube",menu:"Youtube media",id:"plugin-03",main:{js:"screens/js/examples/youtubePlugin.js",css:""}}]},{name:"Style",id:"Style",plugins:[{name:"Background",menu:"Change background",id:"plugin-07",main:{js:"screens/js/examples/changeBackground/main.js",css:"screens/js/examples/changeBackground/main.css"}}]}];
+  - var listPlugins = [{name:"Contents",id:"Contents",plugins:[{name:"Html",menu:"Static Content (HTML)",id:"plugin-01",main:{js:"screens/js/examples/htmlPlugin.js",css:""}},{name:"Form",menu:"Forms",id:"plugin-02",main:{js:"screens/js/examples/formPlugin.js",css:""}}, {name:"Mathematical Formulas",menu:"Mathematical Formulas",id:"plugin-04",main:{js:"screens/js/examples/matchJaxPlugin.js",css:""}}, {name:"Image",menu:"Add image",id:"plugin-05",main:{js:"screens/js/examples/addImagePlugin/main.js",css:"screens/js/examples/addImagePlugin/main.css"}}, {name:"Map",menu:"Add map",id:"plugin-06",main:{js:"screens/js/examples/gmaps/main.js",css:"screens/js/examples/gmaps/main.css"}}]},{name:"Audio & video",id:"AudioVideo",plugins:[{name:"Youtube",menu:"Youtube media",id:"plugin-03",main:{js:"screens/js/examples/youtubePlugin.js",css:""}}]},{name:"Style",id:"Style",plugins:[{name:"Background",menu:"Change background",id:"plugin-07",main:{js:"screens/js/examples/changeBackground/main.js",css:"screens/js/examples/changeBackground/main.css"}}]}];
+
   form#screenform(action="/admin/screens", method="post")
     input(type="hidden", name="id", value="#{screen.id}")
     input(type="hidden", name="currentId", value="#{screen.id}")
@@ -48,17 +49,7 @@ block content
                         |#{option.menu}
                         .pull-right +
         .col-md-5.screen-plugins
-          .plugin.no-plugin.hidden
-            .header
-              h6 Html
-              a.delete(href='#') x
-            .sort
-              a.up-plugin(href='#')
-                i.glyphicon.glyphicon-chevron-up
-              a.down-plugin(href='#')
-                i.glyphicon.glyphicon-chevron-down
-            .content
-              textarea(cols="80",id="editor1",name="editor1",rows="10")!=screen.content
+
         .col-md-4.demo-phone
           .demo-theme.android.real
             img.phone(src='/coreassets/assets/android-cel.svg')
@@ -68,6 +59,7 @@ block content
   
   script.
     var Plugins = !{JSON.stringify(listPlugins)};
+
 block stylesheets
   link(rel="stylesheet", href="screens/css/editor.css")
   //- link(rel="stylesheet", href="screens/css/quill.snow.css")
@@ -84,3 +76,8 @@ block scripts
           'jquery': '/coreassets/jquery/jquery'
       }
     });
+
+  if screen.pluginStates
+    script.
+      var old_states = !{screen.pluginStates};
+      $(document).ready(function(){ window.ShovelApps.Plugins.loadPluginsStates(old_states); });
