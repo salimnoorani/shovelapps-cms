@@ -23,7 +23,10 @@ block content
             select#selectMain.form-control.pull-right
               option(value="-1") #{__('Select main screen')}
               each screen in screens
-                option(selected=screen.isMain, value=screen.id)=screen.title
+                if screen.isMain == "true"
+                  option(selected="selected", value=screen.id)=screen.title
+                else
+                  option(value=screen.id)=screen.title
           .row.screens
             each screen in screens
               .screen(data-id=screen.id)
