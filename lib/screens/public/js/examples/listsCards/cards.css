@@ -1,0 +1,42 @@
+.listaAgenda {
+	color: #1b3f57
+}
+.listaAgenda .content-block-agenda{
+	margin: 15px 15px;
+	padding: 0 15px;
+}
+.listaAgenda .content-block-agenda-alt{
+	margin: 10px 15px 20px 15px;
+	background-color: #ffffff;
+}
+.listaAgenda .content-block-title-alt{
+	background-color: #21bfd1;
+	padding: 10px 15px;
+	width: 100%;
+	margin-left: -15px;
+	margin-bottom: -12px;
+}
+.listaAgenda .content-block-title {
+	background-color: #f9b715;
+	padding: 10px 15px;
+	width: 100%;
+	margin-top: 15px;
+	margin-left: -15px;
+	margin-bottom: 0px;
+	text-transform: none;
+	white-space: normal;
+}
+.listaAgenda .content-block-inner {
+	background: #ffc313;
+	color: #1b3f57;
+	border-color: #ffc313;
+}
+.listaAgenda .agendaInfo {
+	margin-top: 20px;
+	text-align: center;
+	font-size: 4vw;
+}
+.listaAgenda .media {
+	width: 100%;
+}
+.listadoAgenda .no-padding-top {padding-top: 0;}
