@@ -4,7 +4,6 @@ block title
   title Shovel apps CMS - #{__('Menues Manager')}
 
 block content
-  - var types=['Link to page','Container']
   - var places = [{"title": "Main Menu", "menu": "tabbar"}, {"title": "Side Menu", "menu": "sidemenu"}];
   -var icons = ["ion-monitor", "ion-play", "ion-images", "ion-map", "ion-gear-b","ion-music-note", "ion-radio-waves", "ion-earth", "ion-eye", "ion-person", "ion-location", "ion-link", "ion-chevron-left", "ion-information-circled", "ion-share"]
   .container-fluid.bg-white.cms.menues-manager(role="main")
@@ -39,7 +38,7 @@ block content
               th #
               th #{__('Title')}
               if place.menu == 'sidemenu'
-                th #{__('Type')}
+                th #{__('Parent')}
               th #{__('Linked to')}
               th #{__('Icon')}
               th #{__('Actions')}
@@ -48,18 +47,19 @@ block content
 
             - var menues = appmenusByMenu(place.menu);
             each appmenu in menues
-                - var moveUp = appmenu.position == 1? "move-up hidden" : "move-up";
-                - var moveDown = (appmenu.position == menues.length)? "move-down hidden" : "move-down";
                 tr(data-position=appmenu.position)
                   td.text-center=appmenu.position
                   td
                     input.title(type="text", value=appmenu.title, placeholder="Name your menu")
                   if place.menu == 'sidemenu'
                     td
-                      select.select2.selectType(data-placeholder="Type")
-                        each type in types
-                          -var tsel = appmenu.type==type
-                          option(selected=tsel)=type
+                      select.select2.selectParent(data-placeholder="Parent")
+                        -var hasnoparent= appmenu.parent=='None'
+                        option="None"
+                        each parentMenu in menues
+                          if parentMenu.parent=='None'
+                            -var psel = appmenu.parent==parentMenu.title
+                            option(selected=psel)=parentMenu.title
                   td
                     select.select2.screenId(data-placeholder="Parent")
                       each screen in screens
@@ -76,8 +76,8 @@ block content
                     else
                       a.icon.unpublish.state(href="#")
                     .move
-                      a(class=moveUp, href="#")
-                      a(class=moveDown, href="#")
+                      a(class="move-up", href="#")
+                      a(class="move-down", href="#")
                     a.delete(href="#")
 
             tr.new
@@ -86,9 +86,11 @@ block content
                 input.title(type="text", placeholder="Name your menu")
               if place.menu == 'sidemenu'
                 td
-                  select.select2.selectType
-                    each type in types
-                      option=type
+                  select.select2.selectParent
+                    option="None"
+                    each parentMenu in menues
+                      if parentMenu.parent=='None'
+                        option=parentMenu.title
               td
                 select.select2.screenId
                   each screen in screens
@@ -117,24 +119,36 @@ block content
           each icon in icons
             a.icon.iconSelect(class=icon, style="font-size:40px; margin:30px; color:#676767;", href="#", data-dismiss="modal", data-iconname=icon)
 
-
 block scripts
   script(src="screens/js/jquery.rest.min.js")
   script.
     $(document).ready(function(){
         checktypes();
+
         var lastIconButton;
         $('#iconsModal').on('show.bs.modal', function (e) {
           lastIconButton=e.relatedTarget;
         });
-        $('.modal').on("click",".iconSelect", function(e){
+        $('.modal').on("click",".iconSelect", function (e){
           e.preventDefault();
           $(lastIconButton).html($(this).attr('data-iconname'));
         });
         $("table").on("click",".delete",function(e){
-          var btn = $(this), row = btn.parents("tr");
-
-          return row.fadeOut(function(){ $(this).remove(); checkPosition();}), false;
+          var row = $(this).parents("tr");
+          var title = row.find('input.title:first').val();
+          row.fadeOut(function(){
+            $(this).remove();
+            checktypes();
+          });
+          $('select.selectParent').each(function(){
+            if($(this).val()==title){
+              $(this).parents("tr:first").fadeOut(function(){
+                $(this).remove();
+                checktypes();
+              });
+            }
+          });
+          return false;
         });
         $("table").on("click",".add",function(e){
           var row = $(this).parents("tr:first");
@@ -148,28 +162,29 @@ block scripts
             ),
             $("<a>").addClass("delete").attr("href", "#")
           );
-          newRow.find('select.selectType').val(row.find('select.selectType').val());
-          newRow.find('select.screenId').val(row.find('select.screenId').val());
+          newRow.find('select.selectParent:first').val(row.find('select.selectParent:first').val());
+          newRow.find('select.screenId:first').val(row.find('select.screenId:first').val());
           row.find('input:first').val('');
-          row.find('select.selectType').val(row.find('select.selectType option:first').val());
+          row.find('select.selectParent').val(row.find('select.selectParent option:first').val());
           row.find('select.screenId').val(row.find('select.screenId option:first').val());
           row.find('.iconId:first').html('Select icon')
-          checkPosition();
+          $('.title').each(function(){
+            if($(this).val()==newRow.find('select.selectParent:first').val()){
+              newRow.insertAfter($(this).parents("tr:first"));
+            }
+          });
           checktypes();
+
           return false;
         });
         $("table").on("click",".move-up",function(e){
           var row = $(this).parents("tr:first");
-          row.insertBefore(row.prev());
-          checkPosition();
-
+          moveUp(row, row.prev());
           return false;
         });
         $("table").on("click",".move-down",function(e){
           var row = $(this).parents("tr:first");
-          row.insertAfter(row.next());
-          checkPosition();
-
+          moveDown(row, row.next());
           return false;
         });
         $("table").on("click",".state",function(e){
@@ -182,21 +197,85 @@ block scripts
             $(this).removeClass('unpublish');
           }
         });
-        $("table").on("change",".selectType",function(e){
+        $("table").on("change",".selectParent",function(e){
           e.preventDefault();
           var row = $(this).parents("tr:first");
-          if($(this).val()=='Container'){
-            row.find('.screenId:first').attr('disabled',true);
+          var selected = $(this).val();
+          if(selected=='None' && !row.hasClass('new')){
+            row.insertBefore(row.nextAll('tr:not(.childMenu)').eq(0));
+          }
+          if(selected !=='None' && !row.hasClass('new')){
+            if(!row.hasClass('childMenu')){
+              row.addClass('childMenu');
+              $( "<p class='childIcon' style='display:inline;'>¬  </p>" ).insertBefore(row.find('input.title:first'));
+            }
+            $('input.title').each(function(){
+              if($(this).val()==selected){
+                row.insertAfter($(this).parents('tr'));
+              }
+            });
           } else {
-            row.find('.screenId:first').attr('disabled',false);
+            row.removeClass('childMenu');
+            row.find('.childIcon').remove();
+          }
+          checktypes();
+        });
+        $("table").on("focus",".selectParent",function(e){
+          var prevValue = $(this).val();
+          var parentsMenus = [];
+          var menuTitle=$(this).parents('tr').find('.title').val();
+          $(this).find('option').each(function(){
+            $(this).remove();
+          });
+          $(this).append('<option>None</option>');
+          $('input.title').each(function(){
+            if($(this).parents('tr:not(.new)').find('.selectParent').val()==='None' && $(this).parents('tr:not(.new)').find('.title').val()!==menuTitle){
+              parentsMenus.push($(this).val());
+            }
+          });
+          for(var i = 0; i < parentsMenus.length; i++){
+            if(parentsMenus[i]==prevValue){
+              $(this).append('<option selected>'+parentsMenus[i]+'</option>');
+            } else {
+              $(this).append('<option>'+parentsMenus[i]+'</option>');
+            }
+          }
+          checktypes();
+        });
+        $("table").on("keyup",".title",function(e){
+          var done = true;
+          var nextRow = $(this).parents('tr').next();
+          while (done) {
+            if(nextRow.hasClass('childMenu')) {
+              nextRow.find('.selectParent option:selected').remove();
+              nextRow.find('.selectParent').append('<option selected>'+$(this).val()+'</option>');
+              nextRow=nextRow.next();
+            } else {
+            done =false;
+            }
           }
         });
         function checktypes(){
-          $('tr').each(function(index){
-            if($(this).find('.selectType').val()=='Container'){
-              $(this).find('.screenId:first').attr('disabled',true);
+          $('tr:not(.new)').each(function(index){
+            if($(this).find('.selectParent').val()!=='None' &&$(this).find('.selectParent').val()!==undefined){
+              if(!$(this).hasClass('childMenu')){
+                $(this).addClass('childMenu');
+                $( "<p class='childIcon' style='display:inline;'>¬  </p>" ).insertBefore($(this).find('input.title:first'));
+              }
+            }else {
+              $(this).removeClass('childMenu');
+              $(this).find('.childIcon').remove();
+            }
+          });
+          checkPosition();
+          checkParents();
+        }
+        function checkParents(){
+          $('tr:not(.new)').each(function(){
+            if($(this).next().hasClass('childMenu') && $(this).find('select.selectParent:first').val()=='None'){
+              $(this).find('select.selectParent:first').prop('disabled', 'disabled');
             } else {
-              $(this).find('.screenId:first').attr('disabled',false);
+              $(this).find('select.selectParent:first').prop('disabled', false);
             }
           });
         }
@@ -204,20 +283,76 @@ block scripts
           var tables = $("table");
 
           tables.each(function(){
-            var rows = $(this).find("tbody tr:not(.new)");
-            for(var i = 0; i < rows.length; i++)
-              {
-                var position = i + 1;
+            var allRows = $(this).find('tbody tr:not(.new)');
+            for(var i = 0; i < allRows.length; i++){
+              var position = i + 1;
 
-                rows.eq(i).data("position", position);
+              allRows.eq(i).data("position", position);
 
-                rows.eq(i).find("td:first").text(position);
-                rows.eq(i).find(".move-up, .move-down").removeClass("hidden");
-
-                rows.eq(i).find(".move-up").addClass(position == 1? "hidden" : "");
-                rows.eq(i).find(".move-down").addClass(position == rows.length? "hidden" : "");
+              allRows.eq(i).find("td:first").text(position);
+              allRows.eq(i).find(".move-up:first, .move-down:first").removeClass("hidden");
+            }
+            var parentsArray=['None'];
+            $(this).find('input.title').each(function(){
+              if($(this).parents('tr:not(.new)').find('.selectParent').val()==='None'){
+                parentsArray.push($(this).val());
               }
+            });
+            $.each(parentsArray, function(index, parent){
+              var optionList=[]; 
+              allRows.find('select.selectParent').each(function(){
+                if($(this).val()==parent){
+                 optionList.push($(this));
+                }
+              });
+              if(optionList.length){
+                optionList[0].parents('tr').find('.move-up:first').addClass('hidden');
+                optionList[optionList.length-1].last().parents('tr').find('.move-down:first').addClass('hidden');
+              }
+            });
+            //aca no tengo q hacerlo en base al primero, tengo q levantar los titles
+            $(this).find('select.selectParent:first option').each(function(){
+
+            });
           });
+        };
+        function moveUp(row, prevRow){
+          if(prevRow.length){
+            if(prevRow.find('select.selectParent:first').val()==row.find('select.selectParent:first').val()){
+              row.insertBefore(prevRow);
+              $('select.selectParent').each(function(){
+                var crow = $(this).parents('tr');
+                if($(this).val()==row.find('input.title').val()){
+                crow.insertBefore(prevRow);
+                }
+              });
+              checkPosition();
+            }else{
+            moveUp(row,prevRow.prev());
+            }
+          }
+        };
+        function moveDown(row, nextRow){
+          if(nextRow.length){
+            var targetRow=nextRow;
+            $(targetRow).nextAll().each(function(){
+              if($(this).find('select.selectParent:first').val()==nextRow.find('input.title:first').val()){
+                targetRow=$(this);
+              }
+            });
+            if(nextRow.find('select.selectParent:first').val()==row.find('select.selectParent:first').val()){
+              $($('select.selectParent').get().reverse()).each(function(){
+                var crow = $(this).parents('tr');
+                if($(this).val()==row.find('input.title').val()){
+                crow.insertAfter(targetRow);
+                }
+              });
+              row.insertAfter(targetRow);
+              checkPosition();
+            }else{
+            moveDown(row,nextRow.next());
+            }
+          }
         };
 
     });
