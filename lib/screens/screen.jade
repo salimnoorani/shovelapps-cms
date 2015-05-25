@@ -1,116 +1,83 @@
 extend ../../themes/admin/layout
 
+block title
+  title Shovel apps CMS - #{__('Screen')}
+
 block content
+  - var listPlugins = [{name:"Contents",id:"Contents",plugins:[{name:"Html",menu:"Static Content (HTML)",id:"plugin-01",main:{js:"screens/js/examples/htmlPlugin.js",css:""}},{name:"Form",menu:"Forms",id:"plugin-02",main:{js:"screens/js/examples/formPlugin.js",css:""}}, {name:"Mathematical Formulas",menu:"Mathematical Formulas",id:"plugin-04",main:{js:"screens/js/examples/matchJaxPlugin.js",css:""}}, {name:"Image",menu:"Add image",id:"plugin-05",main:{js:"screens/js/examples/addImagePlugin/main.js",css:"screens/js/examples/addImagePlugin/main.css"}}, {name:"Map",menu:"Add map",id:"plugin-06",main:{js:"screens/js/examples/gmaps/main.js",css:"screens/js/examples/gmaps/main.css"}}, {name:"Elements list",menu:"Add elements list",id:"plugin-08",main:{js:"screens/js/examples/lists/main.js",css:"screens/js/examples/lists/main.css"}}, {name:"Cards list",menu:"Add cards list",id:"plugin-09",main:{js:"screens/js/examples/listsCards/main.js",css:"screens/js/examples/listsCards/main.css"}}, {name:"Media list",menu:"Add media list",id:"plugin-10",main:{js:"screens/js/examples/listsMedia/main.js",css:"screens/js/examples/listsMedia/main.css"}}]},{name:"Audio & video",id:"AudioVideo",plugins:[{name:"Youtube",menu:"Youtube media",id:"plugin-03",main:{js:"screens/js/examples/youtubePlugin.js",css:""}}]},{name:"Style",id:"Style",plugins:[{name:"Background",menu:"Change background",id:"plugin-07",main:{js:"screens/js/examples/changeBackground/main.js",css:"screens/js/examples/changeBackground/main.css"}}]}];
+
   form#screenform(action="/admin/screens", method="post")
+    input(type="hidden", name="id", value="#{screen.id}")
     input(type="hidden", name="currentId", value="#{screen.id}")
     input(type="hidden", name="position", value="#{screen.position}")
     input(type="hidden", name="isMain", value="#{screen.isMain}")
+
     .container-fluid.bg-white.cms(role='main')
       .header.center-block.row.voffset6
         a.back-button.pull-left(href='#')
-        .col-md-3.devices.text-right
-          .os
-            a.android.active(href='#')
-            a.ios(href='#')
-          a.phone.active(href='#')
-          a.tablet(href='#')
+        .col-md-2.col-md-offset-1
+          select.form-control(name="compatibility")
+            option(value=1) Android
+            option(value=2) iOS
+            option(value=3) Android &amp; iOS
         .col-md-3
           input.shovel-control(name='title',type='text', value="#{screen.title}")
-        .col-md-3.col-md-offset-1
-          select.form-control
-            option Splash
-        .col-md-1
-          a#destroyScreenButton.upload-theme.pull-right(href="#")
+        .col-md-4.col-md-offset-2.text-center
+          a#destroyScreenButton.header-button(href="#")
             img(src='/coreassets/assets/delete.svg')
             span Delete
-        .col-md-1
-          a#save.upload-theme.pull-right(href='#')
+          a#save.header-button(href='#')
             img(src='/coreassets/assets/save-icon.svg')
             span Save
-      .row.center-block.voffset7.text-left
-        .col-md-2.col-md-offset-1.text-right
+      .row.center-block.voffset3.text-left
+        .col-md-2.col-md-offset-1.text-right.pluginsScreen
           .header.small
             h4 Plugins
             .search
-              input(type='text', placeholder='Search')
+              input.search-plugin(type='text', placeholder='Search')
           .panel-group.text-left.voffset3.shovel-group-panel.small
-            .panel.panel-default.open
-              .panel-heading(href='#ContentPlugins', data-toggle='collapse')
-                h5.panel-title
-                  i.open.pull-right
-                  | Content Plugins
-              #ContentPlugins.panel-collapse.collapse.in
-                .list-group
-                  a.list-group-item.active(href='#') Static Content (HTML)
-                  a.list-group-item(href='#') Form
-                  a.list-group-item(href='#') Image Gallery
-            .panel.panel-default.open
-              .panel-heading(href='#AudioVideo', data-toggle='collapse')
-                h5.panel-title
-                  i.open.pull-right
-                  | Audio &amp; video
-              #AudioVideo.panel-collapse.collapse.in
-                .list-group
-                  a.list-group-item(href='#') Youtube
-                  a.list-group-item(href='#') Grooveshark
-                  a.list-group-item(href='#') Cloud Up
-        .col-md-9
-          textarea(cols="80",id="editor1",name="editor1",rows="10")!=screen.content
-            //- // Add font size dropdown
-            //- select.ql-size
-            //-   option(value='small') Small
-            //-   option(value='normal', selected='') Normal
-            //-   option(value='large') Large
-            //-   option(value='huge') Huge
-            //- // Add a bold button
-            //- span.ql-format-group
-            //-   span.ql-format-button.ql-bold(title='Bold')
-            //-   span.ql-format-separator
-            //-   span.ql-format-button.ql-italic(title='Italic')
-            //-   span.ql-format-separator
-            //-   span.ql-format-button.ql-underline(title='Underline')
-            //-   span.ql-format-separator
-            //- span.ql-format-group
-            //-   span.ql-format-button.ql-list(title='List')
-            //-   span.ql-format-separator
-            //-   span.ql-format-button.ql-bullet(title='Bullet')
-            //-   span.ql-format-separator
-            //-   select.ql-align(title='Text Alignment')
-            //-     option(value='left', label='Left', selected='')
-            //-     option(value='center', label='Center')
-            //-     option(value='right', label='Right')
-            //-     option(value='justify', label='Justify')
-            //- div.form-control#screen(name="content",style="height:400px")!=screen.content
-        //- .col-md-4.demo-phone.text-left
-        //-   .demo-theme.android
-        //-     img.phone(src='/coreassets/assets/android-cel.svg')
-        //-     img.theme(src='/coreassets/assets/elmeme.jpg')
-        //-     // <iframe src="https://www.shovelapps.org/"></iframe>
+            each group in listPlugins
+              .panel.panel-default.open
+                .panel-heading(href='##{group.id}', data-toggle='collapse')
+                  h5.panel-title
+                    i.open.pull-right
+                    | #{group.name}
+                .panel-collapse.collapse.in(id="#{group.id}")
+                  .list-group
+                    each option in group.plugins
+                      a.list-group-item.addPlugin(href='#', data-plugin-id="#{option.id}")
+                        |#{option.menu}
+                        .pull-right +
+        .col-md-5.screen-plugins
 
-        .col-md-12(style="display:none;")
-          .form-group
-            label(for="title") Screen id
-            input.form-control(name="id", value="#{screen.id}")  
-            span.help-block For links between screens   
-          h4.page-header Other screen actions
-          p
-            a#destroyScreenButtonB(href="#") Remove screen   
+        .col-md-4.demo-phone
+          .demo-theme.android.real
+            img.phone(src='/coreassets/assets/android-cel.svg')
+            //-img.theme(src='/coreassets/assets/elmeme.jpg')
+            iframe.iframe-demo
+
+  
+  script.
+    var Plugins = !{JSON.stringify(listPlugins)};
 
 block stylesheets
-  //- link(rel="stylesheet", href="screens/css/quill.base.css")
+  link(rel="stylesheet", href="screens/css/editor.css")
   //- link(rel="stylesheet", href="screens/css/quill.snow.css")
 block scripts
-  script(src="screens/js/CKEditor/ckeditor.js")
-  script(src="screens/js/CKEditor/adapters/jquery.js")
-  //- script(src="screens/js/quill.min.js")
+  script(src="screens/js/require.js")
+  script(src="screens/js/ckeditor/ckeditor.js")
+  script(src="screens/js/ckeditor/adapters/jquery.js")
   script(src="screens/js/jquery.rest.min.js")
   script(src="screens/js/screeneditor.js")
+  script(src="screens/js/main.js")
   script.
-    CKEDITOR.disableAutoInline = true;
-    $( document ).ready( function() {
-      $( '#editor1' ).ckeditor(); // Use CKEDITOR.replace() if element is <textarea>.
-      $( '#editable' ).ckeditor(); // Use CKEDITOR.inline().
-    } );
-    function setValue() {
-      $( '#editor1' ).val( $( 'input#val' ).val() );
-    }
+    require.config({
+      paths: {
+          'jquery': '/coreassets/jquery/jquery'
+      }
+    });
+
+  if screen.pluginStates
+    script.
+      var old_states = !{screen.pluginStates};
+      $(document).ready(function(){ window.ShovelApps.Plugins.loadPluginsStates(old_states); });
