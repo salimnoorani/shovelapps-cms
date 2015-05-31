@@ -1,0 +1,13 @@
+{
+  "getTemplate": function() {}, // da el template para mostrar en la configuracion del mismo, interacciones, etc.
+  "saveState": function() {}, // retorna un objeto para guardar su estado actual
+  "loadState": function() {}, // carga un estado previo guardado
+  "onInit": function() {
+    debug('plugin inited on screens');
+  }, // se ejecuta al ser inicializada una instancia del plugin en el panel de create screen (no necesariamente ya esta a la vista)
+  "onShow": function() {}, // se ejecuta cuando es mostrado al usuario en el panel de create screen
+  "destroy": function() {}, // se ejecuta cuando se borra una instancia del plugin
+  "getHtml": function() {}, // es el html final que generara el plugin
+  "getCss": function() {}, // archivo/archivos css para mostrar el html final 
+  "getJs": function() {} // archivo/archivos js para mostrar el html final
+}

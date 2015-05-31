@@ -67,10 +67,17 @@ body {
 	width: 25px;
 	vertical-align: middle;
 	margin-right: 10px;
+<<<<<<< HEAD
 }
 .navbar-shovel .logo i {
 	font-size: 15px;
 }
+=======
+}
+.navbar-shovel .logo i {
+	font-size: 15px;
+}
+>>>>>>> frontend-develop
 .navbar-shovel .logo h1 {
 	margin: 0;
 	font-size: 18px;
@@ -98,7 +105,7 @@ body {
 	text-align: center;
 	padding-bottom: 100px;
 }
-.cms .header {
+.cms > .header {
 	line-height: 35px;
 }
 .cms .header h2 {
@@ -129,7 +136,10 @@ body {
 	margin-left: 15px;
 	padding-left: 15px;
 	text-align: left;
+<<<<<<< HEAD
 	margin-right: -35%;
+=======
+>>>>>>> frontend-develop
 }
 .cms .header .search input {
 	border: none;
@@ -140,6 +150,12 @@ body {
 	background-size: 20px;
 	padding-left: 35px;
 	max-width: 150px;
+<<<<<<< HEAD
+=======
+}
+.cms .header .search input.large {
+	max-width: 350px;
+>>>>>>> frontend-develop
 }
 .cms .header .upload-theme {
 	color: #adafaf;
@@ -156,6 +172,27 @@ body {
 	margin: 0 auto;
 }
 .cms .header .upload-theme:hover {
+	opacity: 1;
+	text-decoration: none;
+}
+
+.cms .header .header-button {
+	color: #adafaf;
+	font-size: 13px;
+	display: inline-block;
+	text-align: center;
+	line-height: 1;
+	margin-right: 30px;
+}
+.cms .header .header-button:last-child {
+	margin-right: 0;
+}
+.cms .header .header-button img {
+	width: 30px;
+	display: block;
+	margin: 0 auto;
+}
+.cms .header .header-button:hover {
 	opacity: 1;
 	text-decoration: none;
 }
@@ -367,6 +404,7 @@ body {
 	position: absolute;
 	border: none!important;
 	border-radius: 0!important;
+	background: #fff;
 }
 .cms .demo-theme {
 	margin-bottom: 30px;
@@ -376,6 +414,10 @@ body {
 }
 .cms .demo-theme.android {
 	width: 70%;
+}
+.cms .demo-theme.android.real {
+	width: 100%;
+	max-width: 480px;
 }
 .cms .demo-theme.android iframe, .cms .demo-theme.android .theme {
 	width: 80.1%;
@@ -798,15 +840,49 @@ body {
 	width: 75px;
 	margin-bottom: 10px;
 }
-.cms .device .btn > i.download {
+.cms .device .btn > i {
 	width: 15px;
 	height: 15px;
 	display: inline-block;
-	background-image: url('../assets/apis-dlw.svg');
 	background-size: cover;
 	margin-left: 10px;
 	vertical-align: middle;
 }
+<<<<<<< HEAD
+=======
+.cms .device .btn > i.download {
+	background-image: url('../assets/apis-dlw.svg');
+}
+.cms .device .btn > i.android {
+	background-image: url('../assets/android-pink.svg');
+}
+.cms .device .btn > i.ios {
+	background-image: url('../assets/ios-pink.svg');
+}
+
+.cms .device .build {
+	position: relative;
+	display: inline-block;
+}
+.cms .device .build .build-progress {
+	position: absolute;
+	left: 0;
+	top: 0;
+	overflow: hidden;
+	z-index: 8;
+}
+.cms .device .build .build-progress.pink {
+	height: 100%;
+}
+.cms .device .build .text-progress {
+	color: #FFF;
+	font-size: 13px;
+	position: absolute;
+	top: 29px;
+	left: 26px;
+	z-index: 10;
+}
+>>>>>>> frontend-develop
 .cms.publish .tab-content {
 	border: solid 1px #adafaf;
 	border-top: none;
@@ -956,6 +1032,14 @@ body {
 	width: 100%;
 	height: 100%;
 	padding: 120px 0;
+}
+.cms .information-build .save {
+	margin: 0 -20px 0 25px;
+	display: inline-block;
+	vertical-align: middle;
+}
+.cms .information-build .save img {
+	width: 32px;
 }
 .cms .list-selects {
 	border: solid 1px #e9e9ea;
@@ -1631,8 +1715,78 @@ body {
 	border-bottom: solid 1px #adafaf;
 	border-top: none;
 }
+<<<<<<< HEAD
 
 
+=======
+.screen-plugins .plugin {
+	position: relative;
+	margin: 35px 16px 40px 0;
+}
+.screen-plugins .plugin .header {
+	background-color: #f5f5f5;
+	font-weight: 300;
+	display: inline-block;
+	padding: 0 4px;
+	border-radius: 5px 5px 0 0;
+	position: absolute;
+	top: -25px;
+	left: 0;
+}
+.screen-plugins .plugin .header h6 {
+	margin: 0;
+	padding: 0;
+	font-size: 12px;
+	color: #ec1164;
+	display: inline-block;
+	font-weight: 400;
+	margin-right: 10px;
+}
+.screen-plugins .plugin .header a {
+	display: inline-block;
+	color: #676767;
+	font-size: 12px;
+}
+.screen-plugins .plugin .header a:hover {
+	text-decoration: none;
+	color: #ec1164;
+}
+.screen-plugins .plugin .sort {
+	background-color: #f5f5f5;
+	display: inline-block;
+	padding: 2px 3px;
+	border-radius: 0 5px 5px 0;
+	position: absolute;
+	right: -16px;
+	top: 0;
+}
+.screen-plugins .plugin .sort a.disabled {
+	color: #adafaf;
+	cursor: default;
+}
+.screen-plugins .plugin .content {
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+	border: solid 2px #f5f5f5;
+}
+.screen-plugins .plugin .content textarea {
+	width: 100%;
+	height: 100%;
+	border: none;
+	color: #000;
+	padding: 10px;
+}
+.screen-plugins .plugin .sort a {
+	display: block;
+	font-size: 10px;
+}
+
+
+.affix-phone {
+	right: 4%;
+}
+>>>>>>> frontend-develop
 
 
 .message-pro {

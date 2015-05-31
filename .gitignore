@@ -1,4 +1,5 @@
 .DS_Store
+Thumbs.db
 config/production.json
 config/development.json
 # Ignore session files
@@ -22,6 +23,7 @@ themes/*
 !themes/bootstrap-3-jade/
 !themes/jqmobile/
 !themes/onsenui/
+!themes/demo-day/
 
 #Ignore non-default plugins
 plugins/*
