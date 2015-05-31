@@ -67,17 +67,10 @@ body {
 	width: 25px;
 	vertical-align: middle;
 	margin-right: 10px;
-<<<<<<< HEAD
 }
 .navbar-shovel .logo i {
 	font-size: 15px;
 }
-=======
-}
-.navbar-shovel .logo i {
-	font-size: 15px;
-}
->>>>>>> frontend-develop
 .navbar-shovel .logo h1 {
 	margin: 0;
 	font-size: 18px;
@@ -85,6 +78,7 @@ body {
 	display: inline-block;
 	vertical-align: middle;
 	margin-left: 10px;
+
 }
 .navbar-shovel .preview-app {
 	width: 33px;
@@ -136,10 +130,7 @@ body {
 	margin-left: 15px;
 	padding-left: 15px;
 	text-align: left;
-<<<<<<< HEAD
 	margin-right: -35%;
-=======
->>>>>>> frontend-develop
 }
 .cms .header .search input {
 	border: none;
@@ -150,12 +141,9 @@ body {
 	background-size: 20px;
 	padding-left: 35px;
 	max-width: 150px;
-<<<<<<< HEAD
-=======
 }
 .cms .header .search input.large {
 	max-width: 350px;
->>>>>>> frontend-develop
 }
 .cms .header .upload-theme {
 	color: #adafaf;
@@ -882,7 +870,6 @@ body {
 	left: 26px;
 	z-index: 10;
 }
->>>>>>> frontend-develop
 .cms.publish .tab-content {
 	border: solid 1px #adafaf;
 	border-top: none;
@@ -1786,8 +1773,6 @@ body {
 .affix-phone {
 	right: 4%;
 }
->>>>>>> frontend-develop
-
 
 .message-pro {
 	padding: 40px 0;
