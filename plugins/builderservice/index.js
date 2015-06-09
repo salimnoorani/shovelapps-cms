@@ -67,8 +67,7 @@ function builder(app, server, sockets) {
       docs.forEach(function(doc) {
         var d = new Date(doc.timestamp);
         doc.date = d.toDateString();
-        doc.buildIdShort = doc.buildId.split("-")[0];
-
+        doc.buildIdShort = ( doc.buildId ) ? doc.buildId.split("-")[0] : '';
       });
       debug("Found %s previous builds", docs.length);
       app.locals.builds = docs;
@@ -78,19 +77,12 @@ function builder(app, server, sockets) {
 
   builder.sockets = sockets;
 
-  sockets.platform.on("apkbuilt", function(data) {
-    debug("Platform emitted apkbuilt with data: %j", data);
-    app.emit("apkbuilt", data);
-  });
-
-  sockets.platform.on("apkbuilderror", function(data) {
-    debug("Platform emitted apkbuilderror with data: %j", data);
-    app.emit("apkbuilderror", data);
-  });
-
   sockets.platform.on("datareceived", function(data) {
-    debug("Uploading %s to Shovel apps Platform. Progress: %s",
-      data.buildId.buildId, data.progress);
+    debug(
+      "Uploading %s to Shovel apps Platform. Progress: %s",
+      data.buildId.buildId, 
+      data.progress
+    );
     app.emit("source code upload progress", data);
     if (data.progress === "100%") {
       debug("Source code upload complete");
@@ -98,6 +90,17 @@ function builder(app, server, sockets) {
     }
   });
 
+  /**
+   * >>>>> android socket build events
+   */
+  sockets.platform.on("apkbuilt", function(data) {
+    debug("Platform emitted apkbuilt with data: %j", data);
+    app.emit("apkbuilt", data);
+  });
+  sockets.platform.on("apkbuilderror", function(data) {
+    debug("Platform emitted apkbuilderror with data: %j", data);
+    app.emit("apkbuilderror", data);
+  });
   app.on("apkbuilt", function(data) {
     debug("CMS emitted apkbuilt with data: %j", data);
     var buildData = data.url.split("/");
@@ -113,7 +116,6 @@ function builder(app, server, sockets) {
       }
     });
   });
-
   app.on("apkbuilderror", function(data) {
     debug("CMS emitted apkbuilderror with data: %j", data);
     var buildData = data.url.split("/");
@@ -131,6 +133,49 @@ function builder(app, server, sockets) {
     });
   });
 
+  /**
+   * >>>>> ios socket build events
+   */
+  sockets.platform.on("ipabuilt", function(data) {
+    debug("Platform emitted ipabuilt with data: %j", data);
+    app.emit("ipabuilt", data);
+  });
+  sockets.platform.on("ipabuilderror", function(data) {
+    debug("Platform emitted ipabuilderror with data: %j", data);
+    app.emit("ipabuilderror", data);
+  });
+  app.on("ipabuilt", function(data) {
+    var buildData = data.url.split("/");
+    var buildId = buildData[buildData.length - 1].split(".")[0];
+    debug("CMS emitted ipabuilt id %s with data: %j", buildId, data);
+    builds.update({
+      buildId: buildId
+    }, {
+      $set: {
+        buildId: buildId,
+        ipaUrl: data.url,
+        built: 1,
+        timestamp: Date.now()
+      }
+    });
+  });
+  app.on("ipabuilderror", function(data) {
+    var buildData = data.url.split("/");
+    var buildId = buildData[buildData.length - 1].split(".")[0];
+    debug("CMS emitted ipabuilterror id %s with data: %j", buildId, data);
+    builds.update({
+      buildId: buildId
+    }, {
+      $set: {
+        buildId: buildId,
+        ipaUrl: data.url,
+        built: 0,
+        error: 1,
+        timestamp: Date.now()
+      }
+    });
+  });
+
   app.on("upload-complete", function(data) {
     builds.insert({
       buildId: data.buildId.buildId,
@@ -139,7 +184,9 @@ function builder(app, server, sockets) {
       timestamp: Date.now()
     });
   });
+
   sockets.adminPanel.on("connection", function(adminpanelSocket) {
+
     adminpanelSocket.on("already working?", function() {
       if (status === "") {
         adminpanelSocket.emit("doin nothing");
@@ -148,19 +195,34 @@ function builder(app, server, sockets) {
       }
       debug("Checking builder status: " + status);
     });
+    /**
+     * APK build (android)
+     */
     adminpanelSocket.on("buildApk", function(options) {
       debug("APK build request from Admin panel with options: %j", options);
-      builder.renderAndRequestBuild(app, adminpanelSocket);
+      builder.renderAndRequestBuild(app,'android',adminpanelSocket);
       status = 1;
+    });
+    app.on("apkbuilt", function(data) {
+      adminpanelSocket.emit("apkbuilt", data);
+      status = "";
+    });
+    /**
+     * IPA build (iphone)
+     */
+    adminpanelSocket.on("buildIpa", function(options) {
+      debug("IPA build request from Admin panel with options: %j", options);
+      builder.renderAndRequestBuild(app,'ios',adminpanelSocket);
+      status = 1;
+    });
+    app.on("ipabuilt", function(data) {
+      adminpanelSocket.emit("ipabuilt", data);
+      status = "";
     });
     app.on("source code upload progress", function(data) {
       debug("Emitting 'source code upload progress' to Admin panel client");
       adminpanelSocket.emit("source code upload progress", data);
       status = "source code upload progress";
-    });
-    app.on("apkbuilt", function(data) {
-      adminpanelSocket.emit("apkbuilt", data);
-      status = "";
     });
     app.on("upload-complete", function(data) {
       debug("Uploading %s to Shovel apps platform completed.",
@@ -178,10 +240,12 @@ function builder(app, server, sockets) {
     sockets.platform.on("connect", function platformSocketError() {
       adminpanelSocket.emit("platform connect");
     });
+
   });
+
 }
 
-builder.renderAndRequestBuild = function(app, clientSocket) {
+builder.renderAndRequestBuild = function(app, platform, clientSocket) {
   app.cms.frontend.render(app, {}, function(err, html) {
     if (err) {
       clientSocket.emit("error rendering frontend");
@@ -211,6 +275,7 @@ builder.renderAndRequestBuild = function(app, clientSocket) {
           autoClose: true
         });
         var buildStream = builder.createBuildRequestStream(app, {
+          platform: platform,
           appName: config.appName,
           size: fs.statSync(filename).size
         });

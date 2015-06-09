@@ -1,6 +1,7 @@
 .DS_Store
 config/production.json
 config/development.json
+config/localdev.json
 # Ignore session files
 filestorage/.session/*
 !filestorage/.session/.gitkeep
