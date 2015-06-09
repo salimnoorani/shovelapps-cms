@@ -23,6 +23,19 @@
       "path": "filestorage/.session"
     }
   },
+  "initializer":
+  {
+    "mongoUrl": "mongodb://localhost:27017/shovelapps-development",
+    "encrypter": {
+      "key": "keystring",
+      "algorithm": "aes256"
+    },
+    "defaultUser":
+    {
+      "username" : "admin",
+      "password" : "admin"
+    }
+  },
   "localization": {
     "locales": ["en", "es", "fr", "de", "ja", "pt"],
     "directory": "./config/locales"
