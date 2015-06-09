@@ -1,4 +1,5 @@
 .DS_Store
+Thumbs.db
 config/production.json
 config/development.json
 config/localdev.json
