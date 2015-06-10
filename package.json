@@ -44,7 +44,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "publishdocs": "git subtree push --prefix docs origin gh-pages",
-    "start": "node server.js"
+    "start": "node server.js",
+    "devel":"NODE_ENV='localdev' DEBUG='cms:*' node server.js"
   },
   "author": "osk <oscar@shovelapps.com> (http://shovelapps.com/)",
   "license": "MIT",

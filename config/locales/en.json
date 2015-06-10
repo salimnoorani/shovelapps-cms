@@ -123,5 +123,12 @@
   "QR": "QR",
   "Delete": "Delete",
   "Screens": "Screens",
-  "Menus": "Menus"
+  "Menus": "Menus",
+  "Remember me": "Remember me",
+  "Log in": "Log in",
+  "Change app settings": "Change app settings",
+  "Modify app's name and icon.": "Modify app's name and icon.",
+  "Access Management": "Access Management",
+  "Add/remove permissions of users.": "Add/remove permissions of users.",
+  "Manage Categories": "Manage Categories"
 }
